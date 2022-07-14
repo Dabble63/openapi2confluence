@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "dependencies": {
+    "markdown-it": "^13.0.1",
+    "handlebars": "^4.7.7",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+  }
+}
