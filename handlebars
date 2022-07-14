@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const MarkdownIt = require('markdown-it');
+var md = new MarkdownIt();
+var args = yargs(hideBin(process.argv))
+.option('verbose', {
+    alias: 'v',
+    type: 'boolean',
+    description: 'Run with verbose logging'
+})
+.parse();
+var fs   = require('fs'),
+    hbs  = require('handlebars');
+    
+if (args._.length) {
+    try {
+        args = JSON.parse(fs.readFileSync(args._[0]).toString());
+    } catch (e) { }
+}
+else for (var key in args) {
+    try {
+        args[key] = JSON.parse(args[key]);
+    } catch (e) {
+    }
+}
+
+function readStream(s, done) {
+    var bufs = [];
+    s.on('data', function(d) {
+        bufs.push(d);
+    });
+    s.on('end', function() {
+        done(null, Buffer.concat(bufs));
+    });
+    s.resume();
+}
+
+readStream(process.stdin, function(err, tmpl) {
+    function handle(tmpl, args) {
+        hbs.registerHelper('include', function (file, context, opt) {
+            var context = null == context ? args : context;
+            var f = fs.readFileSync(file);
+            return handle(f, context); 
+        });
+        hbs.registerHelper('toJSON', function(obj) {
+            return JSON.stringify(obj, null, 3);
+        });        
+        hbs.registerHelper('eq', function(a,b) {
+            return a == b;
+        });        
+        hbs.registerHelper('markdownit', function(x) {
+            return md.render(x);
+        });        
+        hbs.registerHelper('uc', function(x) {
+            return x.toUpperCase();
+        });        
+        
+        var template = hbs.compile(tmpl.toString());
+        var result = template(args); //{allowProtoMethodsByDefault :true}
+        return result;
+    }
+    process.stdout.write(handle(tmpl, args));
+});
+

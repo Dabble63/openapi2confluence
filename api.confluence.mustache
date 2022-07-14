@@ -1,0 +1,299 @@
+<h1> <strong>{{info.title}}</strong> <sup>
+      <span style="color: rgb(0,128,0);">Version:</span></sup>
+   <strong>
+      <span style="color: rgb(0,128,0);">
+         <code>
+        <sup>{{info.version}}</sup>
+      </code>
+      </span>
+   </strong>
+</h1>
+<p style='font-size: 14px;font-family: sans-serif;color: #3b4151;'>
+   {{{markdownit info.description}}}
+</p>
+<table class="wrapped">
+   <colgroup>
+      <col />
+   </colgroup>
+   <tbody>
+      {{#each paths}}
+      <tr>
+         <th class="{{#this.delete}}highlight-red{{/this.delete}}{{#this.put}}highlight-blue{{/this.put}}{{#this.post}}highlight-blue{{/this.post}}{{#this.get}}highlight-green{{/this.get}}"
+            data-highlight-colour="{{#this.delete}}red{{/this.delete}}{{#this.put}}blue{{/this.put}}{{#this.post}}blue{{/this.post}}{{#this.get}}green{{/this.get}}"
+            title="Background colour : {{#this.delete}}Red{{/this.delete}}{{#this.put}}Blue{{/this.put}}{{#this.post}}Blue{{/this.post}}{{#this.get}}Green{{/this.get}}">
+            <p class="auto-cursor-target">
+               <strong>
+                  <span
+                     style="color: {{#this.delete}}rgb(255,0,0);{{/this.delete}}{{#this.put}}rgb(0,0,255);{{/this.put}}{{#this.post}}rgb(0,0,255);{{/this.post}}{{#this.get}}rgb(0,128,0);{{/this.get}}">
+                     {{#each this}}{{uc @key}}{{/each}}: {{#each
+                     this}}{{summary}}{{/each}}
+                  </span>
+               </strong>
+            </p>
+            <ac:structured-macro ac:macro-id="a53ce9b1-6fe0-4024-bc5f-adc8daff9d7b" ac:name="ui-expand"
+               ac:schema-version="1">
+               <ac:parameter ac:name="title">{{@key}}</ac:parameter>
+               <ac:rich-text-body>
+                  {{#each this}}
+                  <span>{{{markdownit description}}}</span>
+                  {{#if parameters}}
+                  <div
+                     style='display:flex;align-items: center;padding: 8px 20px;min-height: 50px;background: hsla(0,0%,100%,.8);box-shadow: 0 1px 2px rgba(0,0,0,.1);'>
+                     <div style='flex: 1'>
+                        <span
+                           style='font-size: 2em;flex: 1;margin: 0;font-family: sans-serif;color: #3b4151;font-weight: 700;'>Parameters</span>
+                     </div>
+                  </div>
+                  <table style='width:100%;padding:20px'>
+                     <col width='80px' />
+                     <tr style='text-align:left'>
+                        <th class="highlight-blue">Name</th>
+                        <th class="highlight-blue">Description</th>
+                     </tr>
+                     {{#each parameters}}
+                     <tr>
+                        <td>{{name}}
+                           {{#if required}}
+                           <span style="color: rgb(255,0,0);"> <sup>required</sup> </span>
+                           {{/if}}
+                           <p style='font-size:12px;font-weight:bold;margin-left: 15px;padding-bottom: 20px;'>
+                              ({{schema.type}})
+                           </p>
+                        </td>
+                        <td>
+                           {{description}}
+                           {{#if example}}
+                           <p style="font-size:14px;font-weight:bold; padding-bottom: 10px;margin-left:0px">Example:
+                              {{example}}
+                           </p>
+                           {{/if}}
+                           <br/>
+                        </td>
+                     </tr>
+                     {{/each}}
+                  </table>
+                  {{/if}}
+                  {{#if requestBody}}
+                  <div
+                     style='display:flex;align-items: center;padding: 8px 20px;min-height: 50px;background: hsla(0,0%,100%,.8);box-shadow: 0 1px 2px rgba(0,0,0,.1);'>
+                     <div style='flex: 1'>
+                        <span
+                           style='font-size: 2em;flex: 1;margin: 0;font-family: sans-serif;color: #3b4151;font-weight: 700;'>Request
+                           Body</span>
+                     </div>
+                     <span
+                        style='font-size: 14px;flex: 1;margin: 0;font-family: sans-serif;color: #3b4151;font-weight: bold;'>{{#each
+                        requestBody.content}}({{@key}}{{/each}})</span>
+                  </div>
+                  <pre style='padding-left: 10px'></pre>
+                  {{#with requestBody}}
+                  <div
+                     style='padding-left: 10px;font-size: 12px;flex: 1;margin: 0;font-family: sans-serif;color: #000000;font-weight: 700;'>
+                     {{> ExampleSchema}}
+                  </div>
+                  {{/with}}
+                  {{/if}}
+                  <div style=''>
+                     <div
+                        style='padding: 8px 20px;min-height: 50px;background: hsla(0,0%,100%,.8);box-shadow: 0 1px 2px rgba(0,0,0,.1)'>
+                        <div style='font-size: 2em;margin: 0;font-family: sans-serif;color: #3b4151;font-weight: 700;'>
+                           Responses
+                        </div>
+                     </div>
+                     <table style='width:100%;padding:20px'>
+                        <col width='80px' />
+                        <tr style='text-align:left'>
+                           <th class="highlight-blue">Code</th>
+                           <th class="highlight-blue">Description</th>
+                        </tr>
+                        {{#each responses}}
+                        <tr>
+                           <td
+                              style='text-align:center;vertical-align: top;font-size: 14px;flex: 1;margin: 0;font-family: sans-serif;color: #3b4151;font-weight: 500;'>
+                              {{@key}}</td>
+                           <td>{{description}}
+                              {{#if content}}
+                              <p style="font-size:14px;font-weight:bold; padding-bottom: 10px;margin-left:0px">
+                                 {{> ExampleSchema}}
+                              </p>
+                              {{/if}}
+
+                           </td>
+                        </tr>
+                        {{/each}}
+                     </table>
+                  </div>
+                  {{/each}}
+               </ac:rich-text-body>
+            </ac:structured-macro>
+         </th>
+      </tr>
+      {{/each}}
+   </tbody>
+</table>
+
+{{#*inline "schema"}}
+{{#unless (eq type 'object')}}
+{{#unless (eq type 'array')}}
+<span style="color:darkblue;">{{type}}</span>
+{{/unless}}
+{{/unless}}
+{{#if description}}
+<br/><span style="color:black;font-weight:bold;font-size:13px;">{{description}}</span>
+{{/if}}
+<br/><span style="color:green;font-size:13px;">
+{{#unless (eq type 'object')}}
+{{#unless (eq type 'array')}}
+example:
+{{/unless}}
+{{/unless}}
+   {{#if example}}
+   {{#if (eq type 'string')}}
+   "{{example}}"{{else}}
+   {{example}}
+   {{/if}}{{else if enum}}
+   "{{enum.[0]}}"{{else}}{{#if (eq type 'string')}}
+   "Blah blah"
+   {{/if}}
+   {{#if (eq type 'boolean')}}
+   false
+   {{/if}}
+   {{#if (eq type 'object')}}
+   <div style="margin-left:10px">
+      {
+      <table style="margin-left:20px;">
+         {{#each properties}}
+         <tr style="margin-left:10px">
+            <td style="width:160px;vertical-align:top">{{@key}}</td>
+            <td>{{>schema}}</td>
+         </tr>
+         {{/each}}
+      </table>
+
+      }
+   </div>
+   {{/if}}
+   {{#if (eq type 'array')}}
+   <p /><span style="font-size:13px;">[
+      <div style="margin-left:10px">
+         {{>schema items}},
+         <p />...
+      </div>
+   </span>
+   ]
+   {{/if}}
+   {{#if (eq type 'number')}}
+   0
+   {{/if}}
+   {{/if}}
+</span>
+{{/inline}}
+{{#*inline "schema2example"}}
+{{#if example}}
+{{#if (eq type 'string')}}
+"{{example}}"{{else}}
+{{example}}
+{{/if}}{{else if enum}}
+"{{enum.[0]}}"{{else}}{{#if (eq type 'string')}}
+"Blah blah"
+{{/if}}
+{{#if (eq type 'boolean')}}
+false
+{{/if}}
+{{#if (eq type 'object')}}{
+{{#each properties}}
+<div style="margin-left:10px">
+   "{{@key}}":{{>schema2example}}{{#unless @last}},{{/unless}}
+</div>
+{{/each}}
+}
+{{/if}}
+{{#if (eq type 'array')}}[
+<div style="margin-left:10px">
+   {{>schema2example items}},
+   <p />...
+</div>
+]
+{{/if}}
+{{#if (eq type 'number')}}
+0
+{{/if}}
+{{/if}}{{/inline}}
+{{#*inline "ExampleSchema"}}
+{{#with content}}
+{{#each this}}
+<!--[application/json]-->
+<div>{{@key}}</div>
+{{/each}}
+{{/with}}
+<ac:structured-macro ac:macro-id="1ae3ec63-c49c-4cef-8fed-f92b37ab776c" ac:name="auitabs" ac:schema-version="1">
+   <ac:parameter ac:name="direction">horizontal</ac:parameter>
+   <ac:rich-text-body>
+      <p class="auto-cursor-target">
+         <br />
+      </p>
+      {{#with content}}
+      {{#each this}}
+      {{#if schema}}
+      <ac:structured-macro ac:macro-id="5e1878ac-4047-49cc-bc7f-e5a10b0c161e" ac:name="auitabspage"
+         ac:schema-version="1">
+         <ac:parameter ac:name="title">Example</ac:parameter>
+         <ac:rich-text-body>
+            {{#unless example}}
+            <div
+               style='margin-left:10px;margin-bottom:20px;font-size: 12px;padding: 10px;word-wrap: break-word;word-break: break-word;border-radius: 4px;background: #41444e;overflow-wrap: break-word;font-family: monospace;font-weight: 600;color: #fff;'>
+               {{#if schema.properties}}
+               {
+               {{#each schema.properties}}
+               <div style="margin-left:10px">
+                  "{{@key}}":{{>schema2example}}{{#unless @last}},{{/unless}}
+               </div>
+               {{/each}}
+               }
+               {{/if}}
+            </div>
+            {{/unless}}
+            {{/if}}
+            {{#if example}}
+            <pre
+               style='margin-left:10px;margin-bottom:20px;font-size: 12px;padding: 10px;word-wrap: break-word;word-break: break-word;border-radius: 4px;background: #41444e;overflow-wrap: break-word;font-family: monospace;font-weight: 600;color: #fff;'>
+               {{#if (eq @key "application/json")}}
+{{toJSON example}};
+               {{else}}
+{{example}}
+               {{/if}}
+               
+</pre>
+            {{/if}}
+         </ac:rich-text-body>
+      </ac:structured-macro>
+
+      {{#if schema}}
+      <ac:structured-macro ac:macro-id="5e1878ac-4047-49cc-bc7f-e5a10b0c161e" ac:name="auitabspage"
+         ac:schema-version="1">
+         <ac:parameter ac:name="title">Schema</ac:parameter>
+         <ac:rich-text-body>
+            <div
+               style='display:block;margin-left:10px;margin-bottom:20px;font-size: 12px;padding: 10px;word-wrap: break-word;word-break: break-word;border-radius: 4px;background: #aaa;overflow-wrap: break-word;font-family: monospace;font-weight: 600;color: #000;'>
+               {
+               <table style="margin-left:20px;"><tbody>
+                  {{#each schema.properties}}
+                  <tr style="margin-left:10px">
+                     <td style="width:160px;vertical-align:top">{{@key}}</td>
+                     <td>{{>schema}}</td>
+                  </tr>
+                  {{/each}}
+               </tbody></table>
+               }
+            </div>
+         </ac:rich-text-body>
+      </ac:structured-macro>
+      <p class="auto-cursor-target">
+         <br />
+      </p>
+   </ac:rich-text-body>
+</ac:structured-macro>
+{{/if}}
+{{/each}}
+{{/with}}
+{{/inline}}
